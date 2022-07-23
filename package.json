@@ -6,14 +6,13 @@
     "doc": "docs",
     "test": "tests/js/tests"
   },
-  "dependencies": {},
   "devDependencies": {
-    "chai": "^3.5.0",
-    "jsdom": "11.11.0",
+    "chai": "^4.3.6",
+    "jsdom": "^20.0.0",
     "leche": "^2.2.3",
-    "mocha": "^5.2.0",
+    "mocha": "^10.0.0",
     "mocha-jsdom": "^2.0.0",
-    "sinon": "^1.17.6"
+    "sinon": "^14.0.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests/js/tests/*.test.js --timeout 0 --colors"
