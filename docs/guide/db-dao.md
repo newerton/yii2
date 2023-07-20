@@ -275,7 +275,7 @@ a database table if they do not already exist (matching unique constraints), or 
 ```php
 Yii::$app->db->createCommand()->upsert('pages', [
     'name' => 'Front page',
-    'url' => 'http://example.com/', // url is unique
+    'url' => 'https://example.com/', // url is unique
     'visits' => 0,
 ], [
     'visits' => new \yii\db\Expression('visits + 1'),
@@ -682,5 +682,5 @@ $table = Yii::$app->db->getTableSchema('post');
 ```
 
 The method returns a [[yii\db\TableSchema]] object which contains the information about the table's columns,
-primary keys, foreign keys, etc. All these information are mainly utilized by [query builder](db-query-builder.md) 
+primary keys, foreign keys, etc. All this information is mainly utilized by [query builder](db-query-builder.md) 
 and [active record](db-active-record.md) to help you write database-agnostic code. 

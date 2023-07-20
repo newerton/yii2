@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
+ * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @license https://www.yiiframework.com/license/
  */
 
 namespace yii\db;
@@ -28,11 +28,11 @@ use yii\helpers\ArrayHelper;
  * @property array $oldAttributes The old attribute values (name-value pairs). Note that the type of this
  * property differs in getter and setter. See [[getOldAttributes()]] and [[setOldAttributes()]] for details.
  * @property-read mixed $oldPrimaryKey The old primary key value. An array (column name => column value) is
- * returned if the primary key is composite. A string is returned otherwise (null will be returned if the key
- * value is null).
+ * returned if the primary key is composite or `$asArray` is `true`. A string is returned otherwise (null will be
+ * returned if the key value is null).
  * @property-read mixed $primaryKey The primary key value. An array (column name => column value) is returned
- * if the primary key is composite. A string is returned otherwise (null will be returned if the key value is
- * null).
+ * if the primary key is composite or `$asArray` is `true`. A string is returned otherwise (null will be returned
+ * if the key value is null).
  * @property-read array $relatedRecords An array of related records indexed by relation names.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -576,11 +576,22 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      */
     public function setOldAttribute($name, $value)
     {
-        if (isset($this->_oldAttributes[$name]) || $this->hasAttribute($name)) {
+        if ($this->canSetOldAttribute($name)) {
             $this->_oldAttributes[$name] = $value;
         } else {
             throw new InvalidArgumentException(get_class($this) . ' has no attribute named "' . $name . '".');
         }
+    }
+
+    /**
+     * Returns if the old named attribute can be set.
+     * @param string $name the attribute name
+     * @return bool whether the old attribute can be set
+     * @see setOldAttribute()
+     */
+    public function canSetOldAttribute($name)
+    {
+        return (isset($this->_oldAttributes[$name]) || $this->hasAttribute($name));
     }
 
     /**
@@ -639,7 +650,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
             }
         } else {
             foreach ($this->_attributes as $name => $value) {
-                if (isset($names[$name]) && (!array_key_exists($name, $this->_oldAttributes) || $this->isAttributeDirty($name, $value))) {
+                if (isset($names[$name]) && (!array_key_exists($name, $this->_oldAttributes) || $this->isValueDifferent($value, $this->_oldAttributes[$name]))) {
                     $attributes[$name] = $value;
                 }
             }
@@ -990,7 +1001,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      *
      * Note that no automatic type conversion performed by default. You may use
      * [[\yii\behaviors\AttributeTypecastBehavior]] to facilitate attribute typecasting.
-     * See http://www.yiiframework.com/doc-2.0/guide-db-active-record.html#attributes-typecasting.
+     * See https://www.yiiframework.com/doc-2.0/guide-db-active-record.html#attributes-typecasting.
      */
     public function afterSave($insert, $changedAttributes)
     {
@@ -1756,18 +1767,18 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     }
 
     /**
-     * @param string $attribute
-     * @param mixed  $value
+     * @param mixed $newValue
+     * @param mixed $oldValue
      * @return bool
+     * @since 2.0.48
      */
-    private function isAttributeDirty($attribute, $value)
+    private function isValueDifferent($newValue, $oldValue)
     {
-        $old_attribute = $this->oldAttributes[$attribute];
-        if (is_array($value) && is_array($this->oldAttributes[$attribute])) {
-            $value = ArrayHelper::recursiveSort($value);
-            $old_attribute = ArrayHelper::recursiveSort($old_attribute);
+        if (is_array($newValue) && is_array($oldValue) && !ArrayHelper::isAssociative($oldValue)) {
+            $newValue = ArrayHelper::recursiveSort($newValue);
+            $oldValue = ArrayHelper::recursiveSort($oldValue);
         }
 
-        return $value !== $old_attribute;
+        return $newValue !== $oldValue;
     }
 }
