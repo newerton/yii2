@@ -65,13 +65,17 @@ jobs:
             extensions: apcu, curl, dom, imagick, intl, mbstring, mcrypt, memcached
             coverage: none
             os: ubuntu-latest
+          - php: 8.3
+            extensions: apcu, curl, dom, imagick, intl, mbstring, mcrypt, memcached
+            coverage: none
+            os: ubuntu-latest
 
     steps:
       - name: Generate french locale.
         run: sudo locale-gen fr_FR.UTF-8
 
       - name: Checkout.
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install PHP.
         uses: shivammathur/setup-php@v2

@@ -29,6 +29,8 @@ jobs:
             mssql: server:2019-latest
           - php: 8.2
             mssql: server:2022-latest
+          - php: 8.3
+            mssql: server:2022-latest
 
     services:
       mssql:
@@ -43,7 +45,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create MS SQL Database
         run: docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrong!Passw0rd' -Q 'CREATE DATABASE yiitest'

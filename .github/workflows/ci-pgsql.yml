@@ -26,6 +26,8 @@ jobs:
           - 7.4
           - 8.0
           - 8.1
+          - 8.2
+          - 8.3
 
         pgsql:
           - 10
@@ -48,7 +50,7 @@ jobs:
 
     steps:
       - name: Checkout.
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
